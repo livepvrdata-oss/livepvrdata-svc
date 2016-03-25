@@ -21,7 +21,10 @@ import groovy.util.logging.Log4j
 import java.sql.SQLException
 
 import org.apache.commons.io.FilenameUtils
+
+import com.github.livepvrdata.dao.EventParticipantMap;
 import com.mchange.v2.c3p0.ComboPooledDataSource
+
 
 @Log4j
 class DataStore {
@@ -106,6 +109,26 @@ class DataStore {
 		}
 	}
 
+	EventParticipantMap getAlternatives(String epgName) {
+		def sql = new Sql(DATA_SRC.connection)
+		def qry = "SELECT a.name FROM epg AS e LEFT OUTER JOIN alts AS a ON (e.id = a.id) WHERE e.name = $epgName"
+		try {
+			if(log.isTraceEnabled()) {
+				def params = sql.getParameters(qry)
+				def qryStr = sql.asSql(qry, params)
+				log.trace "$qryStr $params"
+			}
+			def alts = new HashSet()
+			sql.eachRow(qry) {
+				alts << it[0]
+			}
+			alts << epgName
+			new EventParticipantMap(epgName, alts)
+		} finally {
+			sql.close()
+		}
+	}
+	
 	String getSetting(String name, String defaultValue = null) {
 		def sql = new Sql(DATA_SRC.connection)
 		def qry = "SELECT value FROM settings WHERE name = $name"
