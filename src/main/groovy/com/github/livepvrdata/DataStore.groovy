@@ -77,7 +77,7 @@ class DataStore {
 	}
 	
 	static private void loadMaps(Sql sql) {
-		['mlb'].each {
+		['mlb', 'nhl'].each {
 			def is = DataStore.class.getResourceAsStream("/maps/${it}.map")
 			is.withStream {
 				it.eachLine {

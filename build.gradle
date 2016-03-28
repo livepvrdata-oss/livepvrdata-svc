@@ -35,6 +35,17 @@ repositories {
 	jcenter()
 }
 
+sourceSets {
+	main {
+		groovy {
+			srcDirs = ['src/main/groovy', 'src/main/java']
+		}
+		java {
+			srcDirs = [] // we need to cross compile java and groovy together
+		}
+	}
+}
+
 dependencies {
 	providedCompile 'org.eclipse.jetty:jetty-server:8.1.16.v20140903'
 	providedCompile 'org.eclipse.jetty:jetty-servlet:8.1.16.v20140903'
