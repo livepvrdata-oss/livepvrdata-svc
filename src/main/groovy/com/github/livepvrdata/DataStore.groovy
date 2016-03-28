@@ -87,7 +87,7 @@ class DataStore {
 			sql.execute '''
 				CREATE TABLE epg (
 					id BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1) PRIMARY KEY,
-					name VARCHAR(512) NOT NULL UNIQUE,
+					name VARCHAR(512) NOT NULL UNIQUE
 				)
 			'''
 
@@ -99,7 +99,7 @@ class DataStore {
 					PRIMARY KEY (id, name)
 				)
 			'''
-						
+
 			sql.execute '''
 				CREATE TABLE settings (
 					name VARCHAR(512) NOT NULL PRIMARY KEY,
