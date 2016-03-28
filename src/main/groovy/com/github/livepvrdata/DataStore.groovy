@@ -59,6 +59,7 @@ class DataStore {
 			if(!sql.connection.warnings) {
 				createTables(sql)
 				setDbVersion(sql)
+				loadMaps(sql)
 				log.info 'New database created'
 			}
 		} finally {
@@ -73,6 +74,28 @@ class DataStore {
 		DATA_SRC.jdbcUrl = JDBC_CONN_STR
 		DATA_SRC.user = ''
 		DATA_SRC.password = ''
+	}
+	
+	static private void loadMaps(Sql sql) {
+		['mlb'].each {
+			def is = DataStore.class.getResourceAsStream("/maps/${it}.map")
+			is.withStream {
+				it.eachLine {
+					it = it.trim()
+					if(it.size() && !it.startsWith('#')) {
+						def data = it.split('=')
+						def epg = data[0]
+						def alts = data[1].split('\\|')
+						sql.withTransaction {
+							def keys = sql.executeInsert("INSERT INTO epg (name) VALUES ($epg)")
+							alts.each {
+								sql.executeInsert("INSERT INTO alts (id, name) VALUES (${keys[0][0]}, $it)")
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	static private void setDbVersion(Sql sql) {

@@ -27,7 +27,7 @@ class Driver {
 		def log = Logger.rootLogger
 		log.removeAllAppenders()
 		log.addAppender(new ConsoleAppender(new SimpleLayout()))
-		log.level = Level.WARN
+		log.level = Level.DEBUG
 	}
 	
 	static main(args) {

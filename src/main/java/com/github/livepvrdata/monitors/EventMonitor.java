@@ -20,18 +20,21 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.TimeZone;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.log4j.Logger;
 
 import com.github.livepvrdata.DataStore;
 import com.github.livepvrdata.common.data.resp.StatusResponse;
 import com.github.livepvrdata.dao.EventParticipantMap;
 
 public abstract class EventMonitor {
-	static private final Logger LOG = Logger.getLogger(EventMonitor.class.getSimpleName());
+	static private final Logger LOG = Logger.getLogger(EventMonitor.class);
 	
 	static public final int DEFAULT_TTL = 120;
 	static public final String TEAM_REGEX_STR = "[A-Z][\\w\\s-&'\\.\\(\\)\\d]+";
@@ -60,7 +63,7 @@ public abstract class EventMonitor {
 	 * @return
 	 */
 	static public List<String> findAlternatives(String[] teams) {
-		List<String> allTeams = new ArrayList<String>();
+		Set<String> allTeams = new HashSet<String>();
 		allTeams.addAll(Arrays.asList(teams));
 		for(int i = 0; i < teams.length; ++i) {
 			String name = teams[i];
@@ -68,11 +71,11 @@ public abstract class EventMonitor {
 			if(alts != null && alts.getNumberOfAlternatives() > 0) {
 				for(String alt : alts.getAlternatives())
 					allTeams.add(alt);
-				LOG.warning("Found alternatives for '" + name + "' " + Arrays.toString(alts.getAlternatives().toArray()));
+				LOG.warn("Found alternatives for '" + name + "' " + Arrays.toString(alts.getAlternatives().toArray()));
 			} else
-				LOG.warning("No alternatives found for '" + name + "'");
+				LOG.warn("No alternatives found for '" + name + "'");
 		}
-		return allTeams;
+		return new ArrayList<String>(allTeams);
 	}	
 	abstract public StatusResponse execute() throws IOException;
 }
