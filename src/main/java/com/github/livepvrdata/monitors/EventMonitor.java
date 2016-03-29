@@ -71,11 +71,13 @@ public abstract class EventMonitor {
 			if(alts != null && alts.getNumberOfAlternatives() > 0) {
 				for(String alt : alts.getAlternatives())
 					allTeams.add(alt);
-				LOG.warn("Found alternatives for '" + name + "' " + Arrays.toString(alts.getAlternatives().toArray()));
-			} else
-				LOG.warn("No alternatives found for '" + name + "'");
+				if(LOG.isDebugEnabled())
+					LOG.debug("Found alternatives for '" + name + "' " + Arrays.toString(alts.getAlternatives().toArray()));
+			} else if(LOG.isDebugEnabled())
+				LOG.debug("No alternatives found for '" + name + "'");
 		}
 		return new ArrayList<String>(allTeams);
-	}	
+	}
+	
 	abstract public StatusResponse execute() throws IOException;
 }
