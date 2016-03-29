@@ -36,7 +36,11 @@ class DataStore {
 		INSTANCE
 	}
 
-	static File getAppRoot() { return new File(System.getProperty('livepvrdata-svc.root') ?: new File(new File(System.getProperty('user.home')), '.livepvrdata-svc').absolutePath) }
+	static File getAppRoot() {
+		def customRoot = System.getProperty('livepvrdata-svc.root') ?: System.getenv('LPDATA_SVC_ROOT')
+		return new File(customRoot ?: new File(new File(System.getProperty('user.home')), '.livepvrdata-svc').absolutePath)
+	}
+	
 	static private final String DB_NAME = "${Boolean.parseBoolean(System.getProperty('livepvrdata-svc.testing')) ? 'memory:' : ''}/${FilenameUtils.separatorsToUnix(FilenameUtils.getPath("${getAppRoot().absolutePath}/throwaway"))}livepvrdata"
 	static private final String JDBC_DRIVER_CLS = 'org.apache.derby.jdbc.EmbeddedDriver'
 	static private final String JDBC_CONN_STR = "jdbc:derby:${DB_NAME}"
