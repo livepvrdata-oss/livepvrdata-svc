@@ -21,34 +21,20 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 import com.github.livepvrdata.AppRuntime
+import com.github.livepvrdata.MonitorFactory
 import com.github.livepvrdata.common.data.req.StatusRequest
 import com.github.livepvrdata.common.data.resp.StatusResponse
-import com.github.livepvrdata.monitors.espn.json.NHL
-import com.github.livepvrdata.monitors.mlb.EventMonitorMLB
 
 
 @WebServlet(urlPatterns=['/query'])
 class StatusServlet extends HttpServlet {
 
-	static private StatusResponse findStatus(StatusRequest req) {
-		def monitor = null
-		switch(req.type) {
-			case ~/MLB Baseball/:
-				monitor = new EventMonitorMLB(req.details, 1000L * req.start)
-				break
-			case ~/NHL Hockey/:
-				monitor = new NHL(req.details, 1000L * req.start)
-				break
-		}
-		monitor?.execute()
-	}
-	
 	@Override
 	void doGet(HttpServletRequest req, HttpServletResponse resp) {
 		resp.contentType = 'text/plain'
 		def input = AppRuntime.instance.gson.fromJson(req.getParameter('q'), StatusRequest)
 		resp.outputStream.withStream {
-			it << AppRuntime.instance.gson.toJson(findStatus(input))
+			it << AppRuntime.instance.gson.toJson(MonitorFactory.fetch(input)?.execute())
 		}
 	}
 	
