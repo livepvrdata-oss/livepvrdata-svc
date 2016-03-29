@@ -15,6 +15,7 @@
 */
 package com.github.livepvrdata.web
 
+import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -26,6 +27,7 @@ import com.github.livepvrdata.monitors.espn.json.NHL
 import com.github.livepvrdata.monitors.mlb.EventMonitorMLB
 
 
+@WebServlet(urlPatterns=['/query'])
 class StatusServlet extends HttpServlet {
 
 	static private StatusResponse findStatus(StatusRequest req) {
