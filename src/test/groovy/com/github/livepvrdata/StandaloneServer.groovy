@@ -15,14 +15,11 @@
 */
 package com.github.livepvrdata
 
-import groovy.servlet.GroovyServlet
-import groovy.servlet.TemplateServlet
-
 import org.eclipse.jetty.server.Server
-import org.eclipse.jetty.servlet.DefaultServlet
 import org.eclipse.jetty.servlet.ServletContextHandler
 import org.eclipse.jetty.servlet.ServletHolder
 
+import com.github.livepvrdata.web.EventsServlet
 import com.github.livepvrdata.web.StatusServlet
 
 
@@ -60,14 +57,17 @@ final class StandaloneServer {
 		ServletHolder holder = new ServletHolder(StatusServlet)
 		sch.addServlet(holder, '/query')
 		
-		holder = new ServletHolder(GroovyServlet)
-		sch.addServlet(holder, '*.groovy')
+		holder = new ServletHolder(EventsServlet)
+		sch.addServlet(holder, '/events.jsp')
 		
-		holder = new ServletHolder(TemplateServlet)
-		sch.addServlet(holder, '*.html')
-		
-		holder = new ServletHolder(DefaultServlet)
-		sch.addServlet(holder, '/')
+//		holder = new ServletHolder(GroovyServlet)
+//		sch.addServlet(holder, '*.groovy')
+//		
+//		holder = new ServletHolder(TemplateServlet)
+//		sch.addServlet(holder, '*.html')
+//		
+//		holder = new ServletHolder(DefaultServlet)
+//		sch.addServlet(holder, '/')
 		
 		SERVER.start()
 	}

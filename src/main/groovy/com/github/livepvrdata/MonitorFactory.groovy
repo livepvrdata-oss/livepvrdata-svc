@@ -51,4 +51,15 @@ class MonitorFactory {
 		}
 		monitor
 	}
+	
+	static List fetchAll() {
+		[
+			CBBM,
+			CFB,
+			EventMonitorMLB,
+			NBA,
+			NFL,
+			NHL
+		]
+	}
 }
