@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse
 import com.github.livepvrdata.AppRuntime
 import com.github.livepvrdata.MonitorFactory
 import com.github.livepvrdata.common.data.req.StatusRequest
-import com.github.livepvrdata.common.data.resp.StatusResponse
+import com.github.livepvrdata.common.data.resp.ExceptionError
 
 
 @WebServlet(urlPatterns=['/query'])
@@ -34,7 +34,11 @@ class StatusServlet extends HttpServlet {
 		resp.contentType = 'text/plain'
 		def input = AppRuntime.instance.gson.fromJson(req.getParameter('q'), StatusRequest)
 		resp.outputStream.withStream {
-			it << AppRuntime.instance.gson.toJson(MonitorFactory.fetch(input)?.execute())
+			try {
+				it << AppRuntime.instance.gson.toJson(MonitorFactory.fetch(input)?.execute())
+			} catch(Throwable t) {
+				it << AppRuntime.instance.gson.toJson(new ExceptionError('Unexpected error', t))
+			}
 		}
 	}
 	
