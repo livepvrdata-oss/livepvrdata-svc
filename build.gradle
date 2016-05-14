@@ -14,14 +14,18 @@
 	limitations under the License.
 */
 
+import java.text.SimpleDateFormat
+import org.apache.tools.ant.filters.ReplaceTokens
+
 plugins {
-	id 'groovy'
-	id 'war'
-	id 'eclipse'
-	id 'net.nemerosa.versioning' version '1.3.0'
+    id 'groovy'
+    id 'war'
+    id 'eclipse'
+    id 'net.nemerosa.versioning' version '1.3.0'
+    id 'com.jfrog.bintray' version '1.5'
 }
 
-defaultTasks 'clean', 'test', 'war'
+defaultTasks 'clean', 'test', 'war', 'pluginXml'
 
 versioning {
 	releaseMode = 'snapshot'
@@ -29,6 +33,14 @@ versioning {
 
 sourceCompatibility = 1.7
 version = versioning.info.display
+
+ext.userOrg = 'opensagetv'
+ext.repoName = 'sagetv-plugins'
+ext.pluginVersion = '1.0'
+ant.properties['download-url-location'] = "http://bintray.com/artifact/download/${ext.userOrg}/${ext.repoName}/${project.name}-${ext.pluginVersion}".toString()
+ant.properties['version'] = version //`ext.pluginVersion
+ant.properties['pluginVersion'] = ext.pluginVersion
+ant.properties['last-modified'] = lastModified()
 
 repositories {
 	mavenCentral()
@@ -51,7 +63,7 @@ dependencies {
 	providedCompile 'org.eclipse.jetty:jetty-servlet:8.1.16.v20140903'
 	providedCompile 'org.eclipse.jetty:jetty-jsp:8.1.16.v20140903'
 
-	compile 'org.codehaus.groovy:groovy-all:2.3.9'
+	compile 'org.codehaus.groovy:groovy-all:2.0.5'
 	compile 'log4j:log4j:1.2.17'
 	compile 'com.mchange:c3p0:0.9.5.2'
 	compile 'net.sf.ehcache:ehcache:2.10.0'
@@ -77,8 +89,47 @@ versionFile {
 	file = props
 }
 
+project.tasks['bintrayUpload'].doFirst {
+    if(!project.hasProperty('bintray.user')) {
+        throw new GradleException("Property 'bintray.user' is not set. In order to upload to bintray, this must be set in ~/.gradle/gradle.properties")
+    }
+    if(!project.hasProperty('bintray.key')) {
+        throw new GradleException("Property 'bintray.key' is not set. In order to upload to bintray, this must be set in ~/.gradle/gradle.properties")
+    }
+}
+
+bintray {
+    user = project.properties['bintray.user']
+    key = project.properties['bintray.key']
+    pkg {
+        repo = project.ext.repoName
+        name = project.name
+        userOrg = project.ext.userOrg
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/livepvrdata-oss/livepvrdata-svc'
+
+        version {
+             name = project.ext.pluginVersion
+             desc = 'Test Release of WebUI to experiment with bintray maven'
+             released  = new Date()
+
+             //configurations = ['pluginArtifacts']
+             filesSpec {
+                 from buildDir
+                 into "${project.name}-${project.ext.pluginVersion}"
+                 include 'plugin.xml'
+                 include '*.zip'
+             }
+             publish = true
+             publicDownloadNumbers = true
+        }
+     }
+ }
+
+String resourcesDir = sourceSets.main.output.resourcesDir
 war {
-	archiveName = 'ROOT.war'
+	archiveName = 'livepvrdata.war'
+	webXml = file("$resourcesDir/web.xml")
 }
 
 compileJava.dependsOn versionFile
@@ -106,4 +157,42 @@ task mkDockerImg(type: Exec) {
 		if(!System.getProperty('os.name').toLowerCase().contains('linux'))
 			throw new UnsupportedOperationException('Can only build docker images on Linux!')
 	}
+}
+
+task zipWar(type:Zip, dependsOn: war) {
+    destinationDir = project.buildDir
+    baseName = "$project.name-war"
+    from(war.outputs.files) { into 'jetty/webapps' }
+
+    checksum(zipWar, 'war-file-checksum')
+}
+
+task zipContext(type:Zip, dependsOn: processResources) {
+    destinationDir = project.buildDir
+    baseName = "$project.name-context"
+    from("$resourcesDir/livepvrdata.context.xml") { into 'jetty/contexts' }
+
+    checksum(zipContext, 'context-file-checksum')
+}
+
+task pluginXml(type:Copy, dependsOn: [zipWar, zipContext]) {
+    from 'src/main/plugin/plugin.xml'
+    into project.buildDir
+
+    eachFile {
+        filter(ReplaceTokens, tokens: ant.properties)
+    }
+}
+
+private void checksum(Task task, String propName) {
+    task.doLast {
+        //Have to do this last so that the files to be MD5 summed will exist
+        task.outputs.files.each { file ->
+            ant.checksum file: file, property:propName, algorithm:'MD5'
+        }
+    }
+}
+
+private String lastModified() {
+    return new SimpleDateFormat("YYYY.MM.dd").format(new Date())
 }
