@@ -40,6 +40,8 @@ Provides Sports Event monitoring for use by the SRE plugin
                <Overwrite>true</Overwrite>
        </Package>
            <ReleaseNotes><![CDATA[
+1.1
+* Use in-memory database
 1.0.1
 * Fix Detroit Tigers typo
 * Fix incorrect display name on Jetty /apps page
