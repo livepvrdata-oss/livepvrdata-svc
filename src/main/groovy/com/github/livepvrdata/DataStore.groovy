@@ -1,12 +1,12 @@
 /*
  Copyright 2016 Battams, Derek
-
+ 
 	Licensed under the Apache License, Version 2.0 (the "License");
 	you may not use this file except in compliance with the License.
 	You may obtain a copy of the License at
-
+ 
 		http://www.apache.org/licenses/LICENSE-2.0
-
+ 
 	Unless required by applicable law or agreed to in writing, software
 	distributed under the License is distributed on an "AS IS" BASIS,
 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,7 +28,7 @@ import com.mchange.v2.c3p0.ComboPooledDataSource
 
 @Log4j
 class DataStore {
-
+		
 	static private DataStore INSTANCE = null
 	synchronized static DataStore getInstance() {
 		if(!INSTANCE)
@@ -40,13 +40,13 @@ class DataStore {
 		def customRoot = System.getProperty('livepvrdata-svc.root') ?: System.getenv('LPDATA_SVC_ROOT')
 		return new File(customRoot ?: new File(new File(System.getProperty('user.home')), '.livepvrdata-svc').absolutePath)
 	}
-
-	static private final String DB_NAME = "${Boolean.parseBoolean(System.getProperty('livepvrdata-svc.db.memory')) ? 'memory:' : ''}/${FilenameUtils.separatorsToUnix(FilenameUtils.getPath("${getAppRoot().absolutePath}/throwaway"))}livepvrdata"
+	
+	static private final String DB_NAME = "${Boolean.parseBoolean(System.getProperty('livepvrdata-svc.testing')) ? 'memory:' : ''}/${FilenameUtils.separatorsToUnix(FilenameUtils.getPath("${getAppRoot().absolutePath}/throwaway"))}livepvrdata"
 	static private final String JDBC_DRIVER_CLS = 'org.apache.derby.jdbc.EmbeddedDriver'
 	static private final String JDBC_CONN_STR = "jdbc:derby:${DB_NAME}"
 
 	static private final ComboPooledDataSource DATA_SRC = new ComboPooledDataSource()
-
+	
 	static {
 		Runtime.runtime.addShutdownHook {
 			try {
@@ -55,7 +55,7 @@ class DataStore {
 				log.warn 'Error closing data source!', t
 			}
 		}
-
+		
 		def jdbcStr = "${JDBC_CONN_STR};create=true"
 		log.info "Connecting to database: $jdbcStr"
 		def sql = Sql.newInstance(jdbcStr, JDBC_DRIVER_CLS)
@@ -73,13 +73,13 @@ class DataStore {
 				log.warn 'SQLError creating database', t
 			}
 		}
-
+		
 		DATA_SRC.driverClass = JDBC_DRIVER_CLS
 		DATA_SRC.jdbcUrl = JDBC_CONN_STR
 		DATA_SRC.user = ''
 		DATA_SRC.password = ''
 	}
-
+	
 	static private void loadMaps(Sql sql) {
 		['mlb', 'nhl', 'nba', 'nfl'].each {
 			def is = DataStore.class.getResourceAsStream("/maps/${it}.map")
@@ -101,14 +101,14 @@ class DataStore {
 			}
 		}
 	}
-
+	
 	static private void setDbVersion(Sql sql) {
 		def qry = "INSERT INTO settings (name, value) VALUES ('dbVersion', '0')"
 		if(log.isTraceEnabled())
 			log.trace qry
 		sql.execute qry
 	}
-
+	
 	static private void createTables(Sql sql) {
 		sql.withTransaction {
 			sql.execute '''
@@ -155,7 +155,7 @@ class DataStore {
 			sql.close()
 		}
 	}
-
+	
 	String getSetting(String name, String defaultValue = null) {
 		def sql = new Sql(DATA_SRC.connection)
 		def qry = "SELECT value FROM settings WHERE name = $name"
@@ -170,7 +170,7 @@ class DataStore {
 			sql.close()
 		}
 	}
-
+	
 	void setSetting(String name, String value) {
 		def sql = new Sql(DATA_SRC.connection)
 		def delQry = "DELETE FROM settings WHERE name = $name"
@@ -192,5 +192,5 @@ class DataStore {
 		} finally {
 			sql.close()
 		}
-	}
+	}	
 }
