@@ -35,5 +35,13 @@
     <url-pattern>/status.groovy</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>OverridesServlet</servlet-name>
+    <servlet-class>com.github.livepvrdata.web.OverridesServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>OverridesServlet</servlet-name>
+    <url-pattern>/overrides</url-pattern>
+  </servlet-mapping>
 </web-app>
 
