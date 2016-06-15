@@ -42,6 +42,7 @@ Provides Sports Event monitoring for use by the SRE plugin
            <ReleaseNotes><![CDATA[
 1.1
 * Add NCAA overrides map
+* Add support for updating maps without clearing derby database
 * New overrides servlet for displaying alternative names
 1.0.1
 * Fix Detroit Tigers typo

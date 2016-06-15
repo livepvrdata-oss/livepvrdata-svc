@@ -18,6 +18,7 @@ package com.github.livepvrdata
 import groovy.sql.Sql
 import groovy.util.logging.Log4j
 
+import java.nio.charset.CoderMalfunctionError;
 import java.sql.SQLException
 
 import org.apache.commons.io.FilenameUtils
@@ -63,9 +64,11 @@ class DataStore {
 			if(!sql.connection.warnings) {
 				createTables(sql)
 				setDbVersion(sql)
-				loadMaps(sql)
 				log.info 'New database created'
 			}
+
+            loadMaps(sql)
+            log.info 'Maps loaded'
 		} finally {
 			try {
 				sql.close()
@@ -91,10 +94,24 @@ class DataStore {
 						def epg = data[0]
 						def alts = data[1].split('\\|')
 						sql.withTransaction {
-							def keys = sql.executeInsert("INSERT INTO epg (name) VALUES ($epg)")
-							alts.each {
-								sql.executeInsert("INSERT INTO alts (id, name) VALUES (${keys[0][0]}, $it)")
-							}
+                            //The SELECT...WHERE...HAVING pattern below is a way to do INSERT IF NOT EXIST
+                            sql.execute("""
+                                INSERT INTO epg (name) (
+                                   SELECT $epg FROM epg
+                                   WHERE name = $epg
+                                   HAVING COUNT(*) = 0
+                                )
+                            """)
+                            def pk = sql.firstRow("SELECT id FROM epg where name = $epg")[0]
+                            alts.each {
+                                sql.execute("""
+                                    INSERT INTO alts (id, name) (
+                                        SELECT $pk, $it FROM alts
+                                        WHERE id = $pk and name = $it
+                                        HAVING count(*) = 0
+                                    )
+                                """)
+                            }
 						}
 					}
 				}
