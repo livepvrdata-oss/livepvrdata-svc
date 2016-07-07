@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+
+  <display-name>Live PVR Data Server</display-name>
+
+  <!-- Default page to serve -->
+  <welcome-file-list>
+    <welcome-file>events</welcome-file>
+  </welcome-file-list>
+  
+  <!-- Servlets -->
+  <servlet>
+    <servlet-name>EventsServlet</servlet-name>
+    <servlet-class>com.github.livepvrdata.web.EventsServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>EventsServlet</servlet-name>
+    <url-pattern>/events</url-pattern>
+    <url-pattern>/events.gsp</url-pattern>
+    <url-pattern>/events.groovy</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>StatusServlet</servlet-name>
+    <servlet-class>com.github.livepvrdata.web.StatusServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>StatusServlet</servlet-name>
+    <url-pattern>/query</url-pattern>
+    <url-pattern>/status</url-pattern>
+    <url-pattern>/status.gsp</url-pattern>
+    <url-pattern>/status.groovy</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>OverridesServlet</servlet-name>
+    <servlet-class>com.github.livepvrdata.web.OverridesServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>OverridesServlet</servlet-name>
+    <url-pattern>/overrides</url-pattern>
+  </servlet-mapping>
+</web-app>
+

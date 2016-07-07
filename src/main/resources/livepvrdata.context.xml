@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
+<Configure class="org.mortbay.jetty.webapp.WebAppContext">
+   <Set name="contextPath">/livepvrdata</Set>
+   <Set name="war"><SystemProperty name="jetty.home" default="."/>/webapps/livepvrdata.war</Set>
+   <Set name="tempDirectory">
+     <SystemProperty name="jetty.home" default="."/>/webapps/livepvrdata
+   </Set>
+   <Set name="defaultsDescriptor">
+     <SystemProperty name="jetty.home" default="."/>/etc/webdefault.xml
+   </Set>
+   <Set name="extractWAR">true</Set>
+   <Set name="copyWebDir">true</Set>
+
+   <Call name="setAttribute">
+     <Arg>pluginid</Arg>
+     <Arg>livepvrdata</Arg>
+   </Call>
+   <Call name="setAttribute">
+     <Arg>webpage</Arg>
+     <Arg>/events.groovy</Arg>
+   </Call>
+
+   <Set name="mimeTypes">
+      <New id="mimeTypes" class="sagex.jetty.content.MimeTypes"/>
+   </Set>
+   <Get name="securityHandler">
+    <Set name="userRealm">
+      <New class="org.mortbay.jetty.security.HashUserRealm">
+        <Set name="name">Live PVR Data Server</Set>
+        <Set name="config"><SystemProperty name="jetty.home" default="."/>/etc/realm.properties</Set>
+      </New>
+    </Set>
+    <Set name="checkWelcomeFiles">true</Set>
+    <Set name="constraintMappings">
+      <Array type="org.mortbay.jetty.security.ConstraintMapping">
+        <Item>
+          <New class="org.mortbay.jetty.security.ConstraintMapping">
+            <Set name="constraint">
+              <New class="org.mortbay.jetty.security.Constraint">
+                <Set name="name">BASIC</Set>
+                <Set name="roles">
+                  <Array type="java.lang.String">
+                    <Item>user</Item>
+                    <Item>admin</Item>
+                    <Item>moderator</Item>
+                  </Array>
+                </Set>
+                <Set name="authenticate">false</Set>
+                <!-- Uncomment line below to force connection to SSL port -->
+                <!-- <Set name="dataConstraint">2</Set> -->
+              </New>
+            </Set>
+            <Set name="pathSpec">/*</Set>
+          </New>
+        </Item>
+      </Array>
+    </Set>
+  </Get>
+</Configure>
+
+
