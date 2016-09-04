@@ -40,6 +40,8 @@ Provides Sports Event monitoring for use by the SRE plugin
                <Overwrite>true</Overwrite>
        </Package>
            <ReleaseNotes><![CDATA[
+1.2
+* Update to support all College Football (Was only Top 25)
 1.1
 * Add NCAA overrides map
 * Add support for updating maps without clearing derby database
