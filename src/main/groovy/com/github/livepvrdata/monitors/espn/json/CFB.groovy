@@ -30,15 +30,18 @@ class CFB extends Monitor {
     static Event[] getEventsForDate(long date) throws IOException {	Monitor.getEventsForDate(SPORT, LEAGUE, date, fetchGroupIds()) }
 
     public static String fetchGroupIds() {
-        String key = String.format("espnjson_%s_%s_groups", SPORT, LEAGUE)
+        String key = String.format("espnjson_%s_%s_groups_v2", SPORT, LEAGUE)
         def groups = AppRuntime.instance.statusCache.get(key)
 
         if(groups == null) {
             String data = new URL(CONFERENCES_URL).text
             def json = new JsonSlurper().parseText(data)
 
-            String groupData = json.conferences.collect {
-                it.groupId
+            String groupData = json.conferences.findResults {
+                //Don't include "sub-groups", only groups with no parent
+                //  The ESPN feed doesn't return the status appropriately when sub-groups
+                //  and their parents are both in the request
+                it.parentGroupId  ?  null : it.groupId
             }.join(",")
 
             def element = new Element(key, groupData)
