@@ -48,6 +48,12 @@ class MonitorFactory {
 			case ~/NFL Football/:
 				monitor = new NFL(req.details, 1000L * req.start)
 				break
+			case ~/Formula One Racing|Formula One/:
+				monitor = new F1(req.details, 1000L * req.start)				
+				break
+			case ~/NASCAR Racing/:
+				monitor = new NASCAR(req.details, 1000L * req.start)				
+				break					
 		}
 		monitor
 	}
@@ -57,6 +63,8 @@ class MonitorFactory {
 			CBBM,
 			CFB,
 			EventMonitorMLB,
+			F1,
+			NASCAR,
 			NBA,
 			NFL,
 			NHL

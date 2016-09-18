@@ -51,12 +51,12 @@ abstract class MotorSportMonitor extends EventMonitor {
 		}
 	}
 
-	static final Event[] getFeed(String sport, String league) throws IOException {
+	static final Event[] getFeed(String sport, String league, String date) throws IOException {
 		String key = String.format("espnjson_%s_%s", sport, league)
 		def events = AppRuntime.instance.statusCache.get(key)
 		if(events == null) {
 			try {
-				def data = new URL(String.format(FEED_URL, sport, league)).text
+				def data = new URL(String.format(FEED_URL, sport, league, new Date(date).format(matchFmt, FEED_TZ)) + "&disable=links,competitors,broadcasts&dates=" + date)).text
 				def parsedData = parseFeed(data)
 				def element = new Element(key, parsedData)
 				element.timeToLive = 120
@@ -72,7 +72,7 @@ abstract class MotorSportMonitor extends EventMonitor {
 
 	static public Event[] getEventsForDate(String sport, String league, long date) throws IOException {
 		def matchFmt = 'yyyyMMdd'
-		getFeed(sport, league).findAll {
+		getFeed(sport, league, new Date(date).format(matchFmt, FEED_TZ)).findAll {
 			new Date(date).format(matchFmt, FEED_TZ) == new Date(it.startDate).format(matchFmt, FEED_TZ)
 		}
 	}

@@ -45,12 +45,12 @@ abstract class Monitor extends EventMonitor {
 		}.unique()
 	}
 
-	static final Event[] getFeed(String sport, String league, String groups) throws IOException {
+	static final Event[] getFeed(String sport, String league, String groups, String date) throws IOException {
 		String key = String.format("espnjson_%s_%s", sport, league)
 		def events = AppRuntime.instance.statusCache.get(key)
 		if(events == null) {
 			try {
-                String url = String.format(FEED_URL, sport, league)
+                String url = String.format(FEED_URL, sport, league) + "&disable=links,broadcasts&dates=" + date
                 if(groups) {
                     url += "&limit=300&groups=$groups"
                 }
@@ -76,7 +76,7 @@ abstract class Monitor extends EventMonitor {
 
     static public Event[] getEventsForDate(String sport, String league, long date, String groupIds) throws IOException {
 		def matchFmt = 'yyyyMMdd'
-		getFeed(sport, league, groupIds).findAll {
+		getFeed(sport, league, groupIds, new Date(date).format(matchFmt, FEED_TZ)).findAll {
 			new Date(date).format(matchFmt, FEED_TZ) == new Date(it.startDate).format(matchFmt, FEED_TZ)
 		}
 	}
