@@ -1,12 +1,12 @@
 /*
  Copyright 2016 Battams, Derek
- 
+
 	Licensed under the Apache License, Version 2.0 (the "License");
 	you may not use this file except in compliance with the License.
 	You may obtain a copy of the License at
- 
+
 		http://www.apache.org/licenses/LICENSE-2.0
- 
+
 	Unless required by applicable law or agreed to in writing, software
 	distributed under the License is distributed on an "AS IS" BASIS,
 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,8 @@ import com.github.livepvrdata.common.data.req.StatusRequest
 import com.github.livepvrdata.monitors.EventMonitor
 import com.github.livepvrdata.monitors.espn.json.CBBM
 import com.github.livepvrdata.monitors.espn.json.CFB
+import com.github.livepvrdata.monitors.espn.json.F1
+import com.github.livepvrdata.monitors.espn.json.NASCAR
 import com.github.livepvrdata.monitors.espn.json.NBA
 import com.github.livepvrdata.monitors.espn.json.NFL
 import com.github.livepvrdata.monitors.espn.json.NHL
@@ -49,15 +51,15 @@ class MonitorFactory {
 				monitor = new NFL(req.details, 1000L * req.start)
 				break
 			case ~/Formula One Racing|Formula One/:
-				monitor = new F1(req.details, 1000L * req.start)				
+				monitor = new F1(req.details, 1000L * req.start)
 				break
 			case ~/NASCAR Racing/:
-				monitor = new NASCAR(req.details, 1000L * req.start)				
-				break					
+				monitor = new NASCAR(req.details, 1000L * req.start)
+				break
 		}
 		monitor
 	}
-	
+
 	static List fetchAll() {
 		[
 			CBBM,
