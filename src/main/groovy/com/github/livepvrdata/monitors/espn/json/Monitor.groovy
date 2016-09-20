@@ -26,7 +26,7 @@ import com.github.livepvrdata.monitors.EventMonitor
 
 @Log4j
 abstract class Monitor extends EventMonitor {
-	static final String FEED_URL = 'http://site.api.espn.com/apis/v2/scoreboard/header?sport=%s&league=%s&disable=links,broadcasts&dates=%s'
+	static final String FEED_URL = 'http://site.api.espn.com/apis/v2/scoreboard/header?sport=%s&league=%s'
 	static private final String DATE_FMT = 'yyyy-MM-dd\'T\'HH:mm:ssX'
 	static private final TimeZone FEED_TZ = TimeZone.getTimeZone('America/New_York')
 
@@ -45,30 +45,37 @@ abstract class Monitor extends EventMonitor {
 		}.unique()
 	}
 
-	static final Event[] getFeed(String sport, String league, String groups, String date) throws IOException {
-		String key = String.format("espnjson_%s_%s", sport, league)
-		def events = AppRuntime.instance.statusCache.get(key)
-		if(events == null) {
-			try {
+    static final Event[] getFeed(String sport, String league, String groups, String date) throws IOException {
+        String key = (date) ?
+                String.format("espnjson_%s_%s_%s", sport, league, date) :
+                String.format("espnjson_%s_%s", sport, league)
+        def events = AppRuntime.instance.statusCache.get(key)
+        if(events == null) {
+            try {
                 String url = String.format(FEED_URL, sport, league, date)
+                if(date) {
+                    url += "&disable=links,broadcasts&dates=$date"
+                }
                 if(groups) {
                     url += "&limit=300&groups=$groups"
                 }
 
-				def data = new URL(url).text
-				def parsedData = parseFeed(data)
-				def element = new Element(key, parsedData)
-				element.timeToLive = 120
-				AppRuntime.instance.statusCache.put(element)
-				events = parsedData
-			} catch(Throwable t) {
-				events = new Event[0]
-				log.error 'Error feching game data', t
-			}
-		} else
-			events = events.objectValue
-		events
-	}
+                def data = new URL(url).text
+                def parsedData = parseFeed(data)
+                def element = new Element(key, parsedData)
+                element.timeToLive = 120
+                AppRuntime.instance.statusCache.put(element)
+                events = parsedData
+            } catch(Throwable t) {
+                events = new Event[0]
+                log.error 'Error feching game data', t
+            }
+        } else {
+            events = events.objectValue
+        }
+
+       return events
+    }
 
     public static Event[] getEventsForDate(String sport, String league, long date) throws IOException {
         getEventsForDate(sport, league, date, null)
@@ -76,8 +83,11 @@ abstract class Monitor extends EventMonitor {
 
     static public Event[] getEventsForDate(String sport, String league, long date, String groupIds) throws IOException {
 		def matchFmt = 'yyyyMMdd'
+        String today = new Date().format(matchFmt, FEED_TZ)
         String dateStr = new Date(date).format(matchFmt, FEED_TZ)
-		getFeed(sport, league, groupIds, dateStr).findAll {
+
+        //Don't pass a date for today, day-of events are handled differently
+		getFeed(sport, league, groupIds, dateStr == today ? null : dateStr).findAll {
             dateStr == new Date(it.startDate).format(matchFmt, FEED_TZ)
 		}
 	}
