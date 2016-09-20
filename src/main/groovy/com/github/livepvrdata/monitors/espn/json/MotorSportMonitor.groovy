@@ -52,7 +52,9 @@ abstract class MotorSportMonitor extends EventMonitor {
 	}
 
 	static final Event[] getFeed(String sport, String league, String date) throws IOException {
-		String key = String.format("espnjson_%s_%s", sport, league)
+        String key = (date) ?
+            String.format("espnjson_%s_%s_%s", sport, league, date) :
+            String.format("espnjson_%s_%s", sport, league)
 		def events = AppRuntime.instance.statusCache.get(key)
 		if(events == null) {
 			try {
