@@ -84,7 +84,7 @@ class DataStore {
 	}
 
 	static private void loadMaps(Sql sql) {
-		['mlb', 'nhl', 'nba', 'nfl', 'ncaa'].each {
+		['mlb', 'nhl', 'nba', 'nfl', 'ncaa', 'wcoh', 'cfl', 'epl'].each {
 			def is = DataStore.class.getResourceAsStream("/maps/${it}.map")
 			is.withStream {
 				it.eachLine {

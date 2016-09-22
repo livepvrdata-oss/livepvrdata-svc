@@ -25,6 +25,14 @@ import com.github.livepvrdata.monitors.espn.json.NBA
 import com.github.livepvrdata.monitors.espn.json.NFL
 import com.github.livepvrdata.monitors.espn.json.NHL
 import com.github.livepvrdata.monitors.mlb.EventMonitorMLB
+import com.github.livepvrdata.monitors.sn.json.CFL
+import com.github.livepvrdata.monitors.sn.json.EPL
+import com.github.livepvrdata.monitors.sn.json.SMLB
+import com.github.livepvrdata.monitors.sn.json.SMLS
+import com.github.livepvrdata.monitors.sn.json.SNBA
+import com.github.livepvrdata.monitors.sn.json.SNHL
+import com.github.livepvrdata.monitors.sn.json.SNFL
+import com.github.livepvrdata.monitors.sn.json.WCOH
 
 
 class MonitorFactory {
@@ -56,20 +64,29 @@ class MonitorFactory {
 			case ~/NASCAR Racing/:
 				monitor = new NASCAR(req.details, 1000L * req.start)
 				break
+			case ~/CFL Football/:
+				monitor = new CFL(req.details, 1000L * req.start)
+				break
+			case ~/\d{4} World Cup of Hockey/:
+				monitor = new WCOH(req.details, 1000L * req.start)
+				break
+			case ~/English Premier League Soccer/:
+				monitor = new EPL(req.details, 1000L * req.start)
+				break				
 		}
 		monitor
 	}
 
 	static List fetchAll() {
 		[
-			CBBM,
-			CFB,
-			EventMonitorMLB,
-			F1,
-			NASCAR,
-			NBA,
-			NFL,
-			NHL
+			CFL,
+			EPL,
+			SMLB,
+			SMLS,			
+			SNBA,
+			SNHL,
+			SNFL,
+			WCOH
 		]
 	}
 }
