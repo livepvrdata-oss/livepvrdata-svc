@@ -40,6 +40,8 @@ Provides Sports Event monitoring for use by the SRE plugin
                <Overwrite>true</Overwrite>
        </Package>
            <ReleaseNotes><![CDATA[
+1.4.1
+* Updated NFL teams
 1.4
 * Add experimental support for college softball
 1.3.1
