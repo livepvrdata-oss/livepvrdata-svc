@@ -42,7 +42,7 @@ class MonitorFactory {
 			case ~/NBA Basketball|\d{4} NBA Finals/:
 				monitor = new NBA(req.details, 1000L * req.start)
 				break
-			case ~/College Baseketball|\d{4} NCAA Basketball Tournament/:
+			case ~/College Basketball|\d{4} NCAA Basketball Tournament/:
 				monitor = new CBBM(req.details, 1000L * req.start)
 				break
 			case ~/College Football|College Football Playoff National Championship/:
