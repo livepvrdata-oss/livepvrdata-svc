@@ -40,6 +40,8 @@ Provides Sports Event monitoring for use by the SRE plugin
                <Overwrite>true</Overwrite>
        </Package>
            <ReleaseNotes><![CDATA[
+1.5
+* Update to support all Division-I Men's College Baseketball (Was only Top 25)
 1.4.1
 * Updated NFL teams
 1.4
