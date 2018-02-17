@@ -40,6 +40,8 @@ Provides Sports Event monitoring for use by the SRE plugin
                <Overwrite>true</Overwrite>
        </Package>
            <ReleaseNotes><![CDATA[
+1.6
+* Add experimental support for college baseball
 1.5.1
 * Fix College Basketball Monitoring support
 * Update to support all Division-I Men's College Baseketball (Was only Top 25)

@@ -19,6 +19,7 @@ import com.github.livepvrdata.common.data.req.StatusRequest
 import com.github.livepvrdata.monitors.EventMonitor
 import com.github.livepvrdata.monitors.espn.json.CBBM
 import com.github.livepvrdata.monitors.espn.json.CFB
+import com.github.livepvrdata.monitors.espn.json.CollegeBaseball
 import com.github.livepvrdata.monitors.espn.json.CollegeSoftball
 import com.github.livepvrdata.monitors.espn.json.F1
 import com.github.livepvrdata.monitors.espn.json.NASCAR
@@ -60,6 +61,9 @@ class MonitorFactory {
             case ~/College Softball/:
                 monitor = new CollegeSoftball(req.details, 1000L * req.start)
                 break
+            case ~/College Baseball/:
+                monitor = new CollegeBaseball(req.details, 1000L * req.start)
+                break
 		}
 		monitor
 	}
@@ -74,7 +78,8 @@ class MonitorFactory {
 			NBA,
 			NFL,
 			NHL,
-            CollegeSoftball
+            CollegeSoftball,
+            CollegeBaseball
 		]
 	}
 }
