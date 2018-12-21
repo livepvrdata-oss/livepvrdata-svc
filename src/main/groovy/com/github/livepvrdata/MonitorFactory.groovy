@@ -18,6 +18,7 @@ package com.github.livepvrdata
 import com.github.livepvrdata.common.data.req.StatusRequest
 import com.github.livepvrdata.monitors.EventMonitor
 import com.github.livepvrdata.monitors.espn.json.CBBM
+import com.github.livepvrdata.monitors.espn.json.CBBW
 import com.github.livepvrdata.monitors.espn.json.CFB
 import com.github.livepvrdata.monitors.espn.json.CollegeBaseball
 import com.github.livepvrdata.monitors.espn.json.CollegeSoftball
@@ -31,42 +32,45 @@ import com.github.livepvrdata.monitors.mlb.EventMonitorMLB
 
 class MonitorFactory {
 
-	static EventMonitor fetch(StatusRequest req) {
-		def monitor = null
-		switch(req.type) {
-			case ~/MLB Baseball|\d{4} (?:World Series|MLB All-Star Game)/:
-				monitor = new EventMonitorMLB(req.details, 1000L * req.start)
-				break
-			case ~/Hockey LNH|NHL Hockey|\d{4} Stanley Cup Final/:
-				monitor = new NHL(req.details, 1000L * req.start)
-				break
-			case ~/NBA Basketball|\d{4} NBA Finals/:
-				monitor = new NBA(req.details, 1000L * req.start)
-				break
-			case ~/College Basketball|\d{4} NCAA Basketball Tournament/:
-				monitor = new CBBM(req.details, 1000L * req.start)
-				break
-			case ~/College Football|College Football Playoff National Championship/:
-				monitor = new CFB(req.details, 1000L * req.start)
-				break
-			case ~/NFL Football/:
-				monitor = new NFL(req.details, 1000L * req.start)
-				break
-			case ~/Formula One Racing|Formula One/:
-				monitor = new F1(req.details, 1000L * req.start)
-				break
-			case ~/NASCAR Racing/:
-				monitor = new NASCAR(req.details, 1000L * req.start)
-				break
-            case ~/College Softball/:
-                monitor = new CollegeSoftball(req.details, 1000L * req.start)
-                break
-            case ~/College Baseball/:
-                monitor = new CollegeBaseball(req.details, 1000L * req.start)
-                break
-		}
-		monitor
-	}
+  static EventMonitor fetch(StatusRequest req) {
+    def monitor = null
+    switch(req.type) {
+      case ~/MLB Baseball|\d{4} (?:World Series|MLB All-Star Game)/:
+        monitor = new EventMonitorMLB(req.details, 1000L * req.start)
+        break
+      case ~/Hockey LNH|NHL Hockey|\d{4} Stanley Cup Final/:
+        monitor = new NHL(req.details, 1000L * req.start)
+        break
+      case ~/NBA Basketball|\d{4} NBA Finals/:
+        monitor = new NBA(req.details, 1000L * req.start)
+        break
+      case ~/Women's College Baseketball/:
+        monitor = new CBBW(req.details, 1000L * req.start);
+        break
+      case ~/College Basketball|\d{4} NCAA Basketball Tournament/:
+        monitor = new CBBM(req.details, 1000L * req.start)
+        break
+      case ~/College Football|College Football Playoff National Championship/:
+        monitor = new CFB(req.details, 1000L * req.start)
+        break
+      case ~/NFL Football/:
+        monitor = new NFL(req.details, 1000L * req.start)
+        break
+      case ~/Formula One Racing|Formula One/:
+        monitor = new F1(req.details, 1000L * req.start)
+        break
+      case ~/NASCAR Racing/:
+        monitor = new NASCAR(req.details, 1000L * req.start)
+        break
+      case ~/College Softball/:
+        monitor = new CollegeSoftball(req.details, 1000L * req.start)
+        break
+      case ~/College Baseball/:
+        monitor = new CollegeBaseball(req.details, 1000L * req.start)
+        break
+    }
+    monitor
+  }
 
 	static List fetchAll() {
 		[
@@ -79,7 +83,8 @@ class MonitorFactory {
 			NFL,
 			NHL,
             CollegeSoftball,
-            CollegeBaseball
+            CollegeBaseball,
+            CBBW
 		]
 	}
 }
