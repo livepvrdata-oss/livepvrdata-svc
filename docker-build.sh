@@ -13,5 +13,5 @@ if [[ $# > 0 ]]; then
 fi
 
 docker run -u $(id -u) -w $base_dir -t -i -v $this_dir:$base_dir \
-  -v ${HOME}:${HOME} -e HOME=$HOME -e GRADLE_USER_HOME=$HOME \
+  -v ${HOME}:${HOME} -e HOME=$HOME -e GRADLE_USER_HOME=$HOME/.gradle/ \
   stuckless/sagetv-build ./gradlew $gradle_cmds
