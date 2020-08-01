@@ -27,6 +27,7 @@ import com.github.livepvrdata.monitors.espn.json.NASCAR
 import com.github.livepvrdata.monitors.espn.json.NBA
 import com.github.livepvrdata.monitors.espn.json.NFL
 import com.github.livepvrdata.monitors.espn.json.NHL
+import com.github.livepvrdata.monitors.espn.json.WNBA
 import com.github.livepvrdata.monitors.mlb.EventMonitorMLB
 
 
@@ -42,6 +43,9 @@ class MonitorFactory {
         monitor = new NHL(req.details, 1000L * req.start)
         break
       case ~/NBA Basketball|\d{4} NBA Finals/:
+        monitor = new NBA(req.details, 1000L * req.start)
+        break
+      case ~/WNBA Basketball|\d{4} WNBA Finals/:
         monitor = new NBA(req.details, 1000L * req.start)
         break
       case ~/Women's College Basketball/:
@@ -73,18 +77,19 @@ class MonitorFactory {
   }
 
 	static List fetchAll() {
-		[
-			CBBM,
-			CFB,
-			EventMonitorMLB,
-			F1,
-			NASCAR,
-			NBA,
-			NFL,
-			NHL,
+        [
+            CBBM,
+            CFB,
+            EventMonitorMLB,
+            F1,
+            NASCAR,
+            NBA,
+            WNBA,
+            NFL,
+            NHL,
             CollegeSoftball,
             CollegeBaseball,
             CBBW
-		]
+        ]
 	}
 }
