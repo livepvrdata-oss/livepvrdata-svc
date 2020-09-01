@@ -46,7 +46,7 @@ class MonitorFactory {
         monitor = new NBA(req.details, 1000L * req.start)
         break
       case ~/WNBA Basketball|\d{4} WNBA Finals/:
-        monitor = new NBA(req.details, 1000L * req.start)
+        monitor = new WNBA(req.details, 1000L * req.start)
         break
       case ~/Women's College Basketball/:
         monitor = new CBBW(req.details, 1000L * req.start);

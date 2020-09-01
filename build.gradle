@@ -36,7 +36,7 @@ version = versioning.info.display
 
 ext.userOrg = 'opensagetv'
 ext.repoName = 'sagetv-plugins'
-ext.pluginVersion = '1.8.0'
+ext.pluginVersion = '1.8.1'
 ant.properties['download-url-location'] = "http://dl.bintray.com/${ext.userOrg}/${ext.repoName}/${project.name}-${ext.pluginVersion}".toString()
 ant.properties['version'] = version //`ext.pluginVersion
 ant.properties['pluginVersion'] = ext.pluginVersion

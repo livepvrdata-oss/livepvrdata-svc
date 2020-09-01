@@ -40,6 +40,8 @@ Provides Sports Event monitoring for use by the SRE plugin
                <Overwrite>true</Overwrite>
        </Package>
            <ReleaseNotes><![CDATA[
+1.8.1
+* Fix WNBA monitor assignment
 1.8
 * Add supprot for WNBA
 1.7
