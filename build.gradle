@@ -28,7 +28,7 @@ defaultTasks 'clean', 'test', 'war', 'pluginXml'
 sourceCompatibility = 1.8
 version = '2.0.0'
 
-ant.properties['download-url-location'] = "http://github.com/livepvrdata-oss/${project.name}/releases/download/1".toString()
+ant.properties['download-url-location'] = "http://github.com/livepvrdata-oss/${project.name}/releases/download/${version}".toString()
 ant.properties['version'] = version
 ant.properties['last-modified'] = lastModified()
 
