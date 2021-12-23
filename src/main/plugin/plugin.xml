@@ -7,7 +7,7 @@ Provides Sports Event monitoring for use by the SRE plugin
        <Author>skiingwiz</Author>
        <CreationDate>2016.04.23</CreationDate>
        <ModificationDate>@last-modified@</ModificationDate>
-       <Version beta="true">@pluginVersion@</Version>
+       <Version>@version@</Version>
        <ResourcePath>plugins/livepvrdata-server</ResourcePath>
        <Webpage>https://github.com/livepvrdata-oss/livepvrdata-svc</Webpage>
        <Dependency>

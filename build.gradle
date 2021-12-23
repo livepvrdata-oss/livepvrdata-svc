@@ -21,22 +21,15 @@ plugins {
     id 'groovy'
     id 'war'
     id 'eclipse'
-    id 'net.nemerosa.versioning' version '1.3.0'
 }
 
 defaultTasks 'clean', 'test', 'war', 'pluginXml'
 
-versioning {
-	releaseMode = 'snapshot'
-}
-
 sourceCompatibility = 1.8
-version = versioning.info.display
+version = '2.0.0'
 
-ext.pluginVersion = '2.0.0'
 ant.properties['download-url-location'] = "http://github.com/livepvrdata-oss/${project.name}/releases/download/1".toString()
 ant.properties['version'] = version
-ant.properties['pluginVersion'] = ext.pluginVersion
 ant.properties['last-modified'] = lastModified()
 
 repositories {
@@ -79,19 +72,10 @@ dependencies {
 	testCompile 'org.seleniumhq.selenium:selenium-htmlunit-driver:2.44.0'
 }
 
-versionFile {
-	def props = new File(sourceSets.main.resources.srcDirs[0], 'svc-versioning.properties')
-	outputs.file props
-	outputs.upToDateWhen { false }
-	file = props
-}
-
 String resourcesDir = sourceSets.main.output.resourcesDir
 war {
 	archiveName = 'livepvrdata.war'
 }
-
-compileJava.dependsOn versionFile
 
 task cpWarToDocker(type: Copy) {
 	def outDir = new File(project.buildDir, 'docker/war')
@@ -129,7 +113,7 @@ task zipWar(type:Zip, dependsOn: war) {
 task pluginXml(type:Copy, dependsOn: zipWar) {
     from 'src/main/plugin/plugin.xml'
     into project.buildDir
-
+    rename '(.*).xml', "\$1-${version}.xml"
     eachFile {
         filter(ReplaceTokens, tokens: ant.properties)
     }
