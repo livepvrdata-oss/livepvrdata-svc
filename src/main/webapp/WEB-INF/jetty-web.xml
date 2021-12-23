@@ -1,0 +1,20 @@
+<?xml version="1.0"  encoding="ISO-8859-1"?>
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure_9_0.dtd">
+<Configure class="org.eclipse.jetty.webapp.WebAppContext">
+   <Set name="contextPath">/livepvrdata/</Set>
+
+   <Call name="setAttribute">
+     <Arg>pluginid</Arg>
+     <Arg>livepvrdata</Arg>
+   </Call>
+   <Call name="setAttribute">
+     <Arg>webpage</Arg>
+     <Arg>/events.groovy</Arg>
+   </Call>
+
+   <Set name="mimeTypes">
+      <New class="sagex.jetty.content.MimeTypes">
+         <Set name="location">webserver/mime.types</Set>
+      </New>
+   </Set>
+</Configure>
