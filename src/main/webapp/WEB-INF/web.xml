@@ -43,5 +43,17 @@
     <servlet-name>OverridesServlet</servlet-name>
     <url-pattern>/overrides</url-pattern>
   </servlet-mapping>
+
+  <security-constraint>
+    <display-name>SecurityConstraint</display-name>
+    <web-resource-collection>
+      <web-resource-name>SageTVWebApps</web-resource-name>
+      <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+  </security-constraint>
+  <login-config>
+    <auth-method>BASIC</auth-method>
+    <realm-name>SageTVRealm</realm-name>
+  </login-config>
 </web-app>
 
