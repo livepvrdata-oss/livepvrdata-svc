@@ -34,6 +34,9 @@ Provides Sports Event monitoring for use by the SRE plugin
                <Overwrite>true</Overwrite>
        </Package>
            <ReleaseNotes><![CDATA[
+2.1.0
+* Move to different MLB monitor
+* Update team maps
 2.0.1
 * Changes to support Jetty 9
 1.8.1
