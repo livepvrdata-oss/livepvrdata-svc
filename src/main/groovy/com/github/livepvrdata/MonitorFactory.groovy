@@ -28,6 +28,7 @@ import com.github.livepvrdata.monitors.espn.json.NBA
 import com.github.livepvrdata.monitors.espn.json.NFL
 import com.github.livepvrdata.monitors.espn.json.NHL
 import com.github.livepvrdata.monitors.espn.json.WNBA
+import com.github.livepvrdata.monitors.espn.json.MLB
 import com.github.livepvrdata.monitors.mlb.EventMonitorMLB
 
 
@@ -37,7 +38,7 @@ class MonitorFactory {
     def monitor = null
     switch(req.type) {
       case ~/MLB Baseball|\d{4} (?:World Series|MLB All-Star Game)/:
-        monitor = new EventMonitorMLB(req.details, 1000L * req.start)
+        monitor = new MLB(req.details, 1000L * req.start)
         break
       case ~/Hockey LNH|NHL Hockey|\d{4} Stanley Cup Final/:
         monitor = new NHL(req.details, 1000L * req.start)
@@ -80,7 +81,7 @@ class MonitorFactory {
         [
             CBBM,
             CFB,
-            EventMonitorMLB,
+            MLB,
             F1,
             NASCAR,
             NBA,
